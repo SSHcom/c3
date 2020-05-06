@@ -1,6 +1,9 @@
-# C3: Compliant Cloud Components
+# 𝗖𝟯: Compliant Cloud Components
 
 The library 𝗖𝟯 provides configuration to AWS CDK components which is compliant with CIS, GDPR and other security standards. 
+
+[![Build Status](https://api.travis-ci.org/SSHcom/c3.svg?branch=master)](http://travis-ci.org/SSHcom/c3)
+[![Coverage Status](https://coveralls.io/repos/github/SSHcom/c3/badge.svg?branch=master)](https://coveralls.io/github/SSHcom/c3?branch=master)
 
 ## Inspiration
 
@@ -35,8 +38,9 @@ The project is [MIT](LICENSE) licensed and accepts contributions via GitHub pull
 1. Fork it
 2. Create your feature branch (`git checkout -b my-new-feature`)
 3. Commit your changes (`git commit -am 'Added some feature'`)
-4. Push to the branch (`git push origin my-new-feature`)
-5. Create new Pull Request
+4. Tag each commit with control id (`(CIS-2.8) ...`)
+5. Push to the branch (`git push origin my-new-feature`)
+6. Create new Pull Request
 
 The development requires TypeScript and AWS CDK
 

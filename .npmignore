@@ -1,0 +1,10 @@
+*.ts
+!*.d.ts
+coverage
+
+test
+node_modules
+
+tsconfig.json
+tslint.json
+jest.config.js

@@ -1,0 +1,5 @@
+lib/*.js
+lib/*.d.ts
+coverage/
+node_modules/
+

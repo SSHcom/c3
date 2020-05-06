@@ -1,0 +1,43 @@
+{
+  "name": "@ssh/c3",
+  "version": "0.0.0",
+  "description": "Compliant Cloud Components",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "lint": "tslint -p tsconfig.json",
+    "test": "jest --no-cache --coverage",
+    "coveralls": "jest --coverage && cat ./coverage/lcov.info | coveralls",
+    "prepare": "npm run build",
+    "prepublishOnly": "npm run test && npm run lint",
+    "clean": "rm lib/*.js lib/index.d.ts && rm -Rf node_modules"
+  },
+  "author": {
+    "name": "SSH Communications Security Corp",
+    "url": "https://ssh.com",
+    "organization": true
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/SSHcom/c3.git"
+  },
+  "dependencies": {
+    "@types/node": "13.13.5",
+    "@aws-cdk/core": "*",
+    "@aws-cdk/aws-kms": "*"
+  },
+  "devDependencies": {
+    "@types/jest": "^25.2.1",
+    "jest": "^26.0.1",
+    "ts-jest": "^25.4.0",
+    "prettier": "^2.0.5",
+    "ts-node": "^8.10.1",
+    "tslint": "^6.1.2",
+    "tslint-config-prettier": "^1.18.0",
+    "typescript": "^3.8.3",
+    "coveralls": "^3.0.11",
+    "@aws-cdk/assert": "*"
+  }
+}

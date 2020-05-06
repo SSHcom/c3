@@ -1,4 +1,4 @@
-# C3: Compliant Cloud Components
+# 𝗖𝟯: Compliant Cloud Components
 
 The library 𝗖𝟯 provides configuration to AWS CDK components which is compliant with CIS, GDPR and other security standards. 
 

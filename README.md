@@ -2,6 +2,9 @@
 
 The library 𝗖𝟯 provides configuration to AWS CDK components which is compliant with CIS, GDPR and other security standards. 
 
+[![Build Status](https://api.travis-ci.org/SSHcom/c3.svg?branch=master)](http://travis-ci.org/SSHcom/c3)
+[![Coverage Status](https://coveralls.io/repos/github/SSHcom/c3/badge.svg?branch=master)](https://coveralls.io/github/SSHcom/c3?branch=master)
+
 ## Inspiration
 
 Cyber-security address various threats with data loses thefts, breaches and violation of privacy. Fortunately, we have a group of security experts who looks after these threats. They have developed controls and benchmark protocols to address these challenges. Often, usage of the tools requires a special effort and domain knowledge from software engineers. This library helps AWS cloud developers with controls defined by:

@@ -4,6 +4,7 @@ coverage
 
 test
 node_modules
+doc
 
 tsconfig.json
 tslint.json

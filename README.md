@@ -25,7 +25,7 @@ npm install --save @ssh/c3
 Use components provided by the library:
 
 ```typescript
-import { kms } from '@ssh/c3'
+import { kms } from '@ssh.com/c3'
 
 const stack = new cdk.Stack()
 new kms.SymmetricKey(stack, 'MyKey')

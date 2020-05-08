@@ -6,3 +6,4 @@
 // https://github.com/SSHcom/c3
 //
 export import kms = require('./kms')
+export import efs = require('./efs')

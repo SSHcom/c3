@@ -7,6 +7,7 @@
 //
 import * as cdk from '@aws-cdk/core'
 import * as kms from '@aws-cdk/aws-kms'
+import * as iam from '@aws-cdk/aws-iam'
 
 /*
 
@@ -30,6 +31,17 @@ export class SymmetricKey extends kms.Key {
   constructor(scope: cdk.Construct, id: string, props: kms.KeyProps = {}) {
     const { alias, ...other } = props
     super(scope, id, symmetricKeyProps({ alias: alias || id, ...other }))
+  }
+
+  public grantEncryptDecryptLogs() {
+    return this.grant(
+      new iam.ServicePrincipal(`logs.${cdk.Aws.REGION}.amazonaws.com`),
+      'kms:Encrypt*',
+      'kms:Decrypt*',
+      'kms:ReEncrypt*',
+      'kms:GenerateDataKey*',
+      'kms:Describe*',
+    )
   }
 }
 

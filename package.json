@@ -26,7 +26,8 @@
   "dependencies": {
     "@types/node": "13.13.5",
     "@aws-cdk/core": "*",
-    "@aws-cdk/aws-kms": "*"
+    "@aws-cdk/aws-kms": "*",
+    "@aws-cdk/aws-iam": "*"
   },
   "devDependencies": {
     "@types/jest": "^25.2.1",

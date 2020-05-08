@@ -26,6 +26,7 @@ CryptoFileSystem enforces AWS EFS encryption with KMS key. The usage of
 this component ensures a data protection by design and by default
 - GDPR-25
 
+https://docs.aws.amazon.com/efs/latest/ug/managing-encrypt.html
 */
 export class CryptoFileSystem extends efs.FileSystem {
   constructor(scope: cdk.Construct, id: string, props: CryptoFileSystemProps) {

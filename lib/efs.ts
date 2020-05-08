@@ -37,21 +37,3 @@ export class CryptoFileSystem extends efs.FileSystem {
     fs.kmsKeyId = kmsKeyId
   }
 }
-
-
-/*
-
-const fs = new efs.FileSystem(scope, 'Efs',
-{
-  vpc,
-  fileSystemName: `${scope.node.path}/efs`,
-  securityGroup: sg,
-  vpcSubnets: { subnetType: ec2.SubnetType.PRIVATE },
-}
-)
-const cfnFs = fs.node.defaultChild as efs.CfnFileSystem
-cfnFs.encrypted = true
-cfnFs.kmsKeyId = 'alias/saas'
-
-*/
-

@@ -7,6 +7,58 @@
 //
 import * as cdk from '@aws-cdk/core'
 import * as kms from '@aws-cdk/aws-kms'
+import * as iam from '@aws-cdk/aws-iam'
+
+/*
+
+fromAlias just creates kms.IAlias compatible readonly instance of key alias
+*/
+export const fromAlias = (scope: cdk.Construct, id: string): kms.IAlias => {
+  return new JustAlias(scope, id)
+} 
+
+class JustAlias extends cdk.Resource implements kms.IAlias {
+  public readonly aliasName: string;
+  public readonly aliasTargetKey: kms.IKey;
+
+  constructor(scope: cdk.Construct, id: string) {
+    super(scope, id)
+    this.aliasName = id
+  }
+
+  public get keyArn(): string {
+    return (null as unknown) as string
+  }
+
+  public get keyId(): string {
+    return (null as unknown) as string
+  }
+
+  public addAlias(_alias: string): kms.Alias {
+    return (null as unknown) as kms.Alias
+  }
+
+  public addToResourcePolicy(_statement: iam.PolicyStatement, _allowNoOp?: boolean): void {
+    return
+  }
+
+  public grant(_grantee: iam.IGrantable, ..._actions: string[]): iam.Grant {
+    return (null as unknown) as iam.Grant
+  }
+
+  public grantDecrypt(_grantee: iam.IGrantable): iam.Grant {
+    return (null as unknown) as iam.Grant
+  }
+
+  public grantEncrypt(_grantee: iam.IGrantable): iam.Grant {
+    return (null as unknown) as iam.Grant
+  }
+
+  public grantEncryptDecrypt(_grantee: iam.IGrantable): iam.Grant {
+    return (null as unknown) as iam.Grant
+  }  
+}
+
 
 /*
 

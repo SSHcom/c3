@@ -8,16 +8,16 @@
 //
 import * as cdk from '@aws-cdk/core'
 import * as efs from '@aws-cdk/aws-efs'
+import * as kms from '@aws-cdk/aws-kms'
 
 /*
 
 CryptoFileSystemProps emphasizes needs of file system encryption 
 using KMS service.
-
 */
-export interface CryptoFileSystemProps extends efs.FileSystemProps {
-  /** either KMS key alias or key id */
-  readonly kmsKeyId: string
+export interface CryptoFileSystemProps extends Omit<efs.FileSystemProps, 'kmsKey'>  {
+  /* KMS key alias, use kms.fromAlias(...) */
+  readonly kmsKey: kms.IAlias
 }
 
 /*
@@ -30,11 +30,11 @@ https://docs.aws.amazon.com/efs/latest/ug/managing-encrypt.html
 */
 export class CryptoFileSystem extends efs.FileSystem {
   constructor(scope: cdk.Construct, id: string, props: CryptoFileSystemProps) {
-    const { encrypted, kmsKey, kmsKeyId, ...other } = props
+    const { encrypted, kmsKey, ...other } = props
     super(scope, id, other)
 
     const fs = this.node.defaultChild as efs.CfnFileSystem
     fs.encrypted = true
-    fs.kmsKeyId = kmsKeyId
+    fs.kmsKeyId = kmsKey.aliasName
   }
 }

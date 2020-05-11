@@ -7,6 +7,70 @@
 //
 import * as cdk from '@aws-cdk/core'
 import * as kms from '@aws-cdk/aws-kms'
+import * as iam from '@aws-cdk/aws-iam'
+
+/*
+
+fromAlias just creates kms.IAlias compatible readonly instance of key alias
+*/
+export const fromAlias = (scope: cdk.Construct, id: string): kms.IAlias => {
+  return new JustAlias(scope, id)
+} 
+
+class JustAlias extends cdk.Resource implements kms.IAlias {
+  public readonly aliasName: string;
+  public readonly aliasTargetKey: kms.IKey;
+
+  constructor(scope: cdk.Construct, id: string) {
+    super(scope, id)
+    this.aliasName = id
+  }
+
+  public get keyArn(): string {
+    return ''
+  }
+
+  public get keyId(): string {
+    return this.aliasName;
+  }
+
+  public addAlias(alias: string): kms.Alias {
+    if (!this.aliasTargetKey)
+      throw new Error(`Alias ${this.aliasName} is read-only.`)
+    return this.aliasTargetKey.addAlias(alias);
+  }
+
+  public addToResourcePolicy(statement: iam.PolicyStatement, allowNoOp?: boolean): void {
+    if (!this.aliasTargetKey)
+      throw new Error(`Alias ${this.aliasName} is read-only.`)
+    this.aliasTargetKey.addToResourcePolicy(statement, allowNoOp);
+  }
+
+  public grant(grantee: iam.IGrantable, ...actions: string[]): iam.Grant {
+    if (!this.aliasTargetKey)
+      throw new Error(`Alias ${this.aliasName} is read-only.`)
+    return this.aliasTargetKey.grant(grantee, ...actions);
+  }
+
+  public grantDecrypt(grantee: iam.IGrantable): iam.Grant {
+    if (!this.aliasTargetKey)
+      throw new Error(`Alias ${this.aliasName} is read-only.`)
+    return this.aliasTargetKey.grantDecrypt(grantee);
+  }
+
+  public grantEncrypt(grantee: iam.IGrantable): iam.Grant {
+    if (!this.aliasTargetKey)
+      throw new Error(`Alias ${this.aliasName} is read-only.`)
+    return this.aliasTargetKey.grantEncrypt(grantee);
+  }
+
+  public grantEncryptDecrypt(grantee: iam.IGrantable): iam.Grant {
+    if (!this.aliasTargetKey)
+      throw new Error(`Alias ${this.aliasName} is read-only.`)
+    return this.aliasTargetKey.grantEncryptDecrypt(grantee);
+  }  
+}
+
 
 /*
 

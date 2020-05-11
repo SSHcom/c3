@@ -1,7 +1,7 @@
 import * as assert from '@aws-cdk/assert'
 import * as cdk from '@aws-cdk/core'
 import * as iam from '@aws-cdk/aws-iam'
-import { kms } from '../lib'
+import * as c3 from '../lib'
 
 const allowRootAccess = {
   Action: "kms:*",
@@ -30,7 +30,7 @@ const allowRootAccess = {
 it('symmetric kms.Key compliant with CIS 2.8',
   () => {
     const stack = new cdk.Stack()
-    new kms.SymmetricKey(stack, 'MyKey')
+    new c3.kms.SymmetricKey(stack, 'MyKey')
     
     const expect = {
       Properties: {
@@ -52,7 +52,7 @@ it('symmetric kms.Key compliant with CIS 2.8',
 it('symmetric kms.Key defines an alias',
   () => {
     const stack = new cdk.Stack()
-    new kms.SymmetricKey(stack, 'MyKey')
+    new c3.kms.SymmetricKey(stack, 'MyKey')
 
     const expect = {
       AliasName: 'alias/MyKey',
@@ -66,18 +66,20 @@ it('symmetric kms.Key defines an alias',
   }
 )
 
-it('kms.Key alias does nothing',
+it('fromAlias creates a kms.IAlias, that does nothing',
   () => {
     const stack = new cdk.Stack()
-    const key = kms.fromAlias(stack, 'alias/key')
+    const key = c3.kms.fromAlias(stack, 'alias/key')
     const role = new iam.ArnPrincipal(`arn:aws:iam::${cdk.Aws.ACCOUNT_ID}:role/Role`)
-
-    expect(() => key.addAlias('other')).toThrow()
-    expect(() => key.addToResourcePolicy(new iam.PolicyStatement())).toThrow()
-    expect(() => key.grant(role)).toThrow()
-    expect(() => key.grantDecrypt(role)).toThrow()
-    expect(() => key.grantEncrypt(role)).toThrow()
-    expect(() => key.grantEncryptDecrypt(role)).toThrow()
+    
+    expect(key.addAlias('other')).toBeNull()
+    expect(key.keyArn).toBeNull()
+    expect(key.keyId).toBeNull()
+    expect(key.grant(role)).toBeNull()
+    expect(key.grantDecrypt(role)).toBeNull()
+    expect(key.grantEncrypt(role)).toBeNull()
+    expect(key.grantEncryptDecrypt(role)).toBeNull()
+    expect(key.addToResourcePolicy(new iam.PolicyStatement())).toBeUndefined()
 
     assert.expect(stack).to(assert.countResources('AWS::KMS::Alias', 0))
   }

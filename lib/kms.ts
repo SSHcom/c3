@@ -27,47 +27,35 @@ class JustAlias extends cdk.Resource implements kms.IAlias {
   }
 
   public get keyArn(): string {
-    return ''
+    return (null as unknown) as string
   }
 
   public get keyId(): string {
-    return this.aliasName;
+    return (null as unknown) as string
   }
 
-  public addAlias(alias: string): kms.Alias {
-    if (!this.aliasTargetKey)
-      throw new Error(`Alias ${this.aliasName} is read-only.`)
-    return this.aliasTargetKey.addAlias(alias);
+  public addAlias(_alias: string): kms.Alias {
+    return (null as unknown) as kms.Alias
   }
 
-  public addToResourcePolicy(statement: iam.PolicyStatement, allowNoOp?: boolean): void {
-    if (!this.aliasTargetKey)
-      throw new Error(`Alias ${this.aliasName} is read-only.`)
-    this.aliasTargetKey.addToResourcePolicy(statement, allowNoOp);
+  public addToResourcePolicy(_statement: iam.PolicyStatement, _allowNoOp?: boolean): void {
+    return
   }
 
-  public grant(grantee: iam.IGrantable, ...actions: string[]): iam.Grant {
-    if (!this.aliasTargetKey)
-      throw new Error(`Alias ${this.aliasName} is read-only.`)
-    return this.aliasTargetKey.grant(grantee, ...actions);
+  public grant(_grantee: iam.IGrantable, ..._actions: string[]): iam.Grant {
+    return (null as unknown) as iam.Grant
   }
 
-  public grantDecrypt(grantee: iam.IGrantable): iam.Grant {
-    if (!this.aliasTargetKey)
-      throw new Error(`Alias ${this.aliasName} is read-only.`)
-    return this.aliasTargetKey.grantDecrypt(grantee);
+  public grantDecrypt(_grantee: iam.IGrantable): iam.Grant {
+    return (null as unknown) as iam.Grant
   }
 
-  public grantEncrypt(grantee: iam.IGrantable): iam.Grant {
-    if (!this.aliasTargetKey)
-      throw new Error(`Alias ${this.aliasName} is read-only.`)
-    return this.aliasTargetKey.grantEncrypt(grantee);
+  public grantEncrypt(_grantee: iam.IGrantable): iam.Grant {
+    return (null as unknown) as iam.Grant
   }
 
-  public grantEncryptDecrypt(grantee: iam.IGrantable): iam.Grant {
-    if (!this.aliasTargetKey)
-      throw new Error(`Alias ${this.aliasName} is read-only.`)
-    return this.aliasTargetKey.grantEncryptDecrypt(grantee);
+  public grantEncryptDecrypt(_grantee: iam.IGrantable): iam.Grant {
+    return (null as unknown) as iam.Grant
   }  
 }
 

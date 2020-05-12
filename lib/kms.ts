@@ -94,6 +94,7 @@ export class SymmetricKey extends kms.Key {
   constructor(scope: cdk.Construct, id: string, props: kms.KeyProps = {}) {
     const { alias, ...other } = props
     super(scope, id, symmetricKeyProps({ alias: alias || id, ...other }))
+    cdk.Tag.add(this, 'stack', cdk.Aws.STACK_NAME)
   }
 }
 

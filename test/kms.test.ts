@@ -39,6 +39,12 @@ it('symmetric kms.Key compliant with CIS 2.8',
           Statement: [allowRootAccess],
           Version: '2012-10-17',
         },
+        Tags: [
+          {
+            Key: "stack",
+            Value: { Ref: "AWS::StackName" },
+          },
+        ]
       },
       DeletionPolicy: 'Retain',
       UpdateReplacePolicy: 'Retain',

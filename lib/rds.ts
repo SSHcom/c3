@@ -26,6 +26,7 @@ and by default, which makes it compliant with
 - GDPR-25
 - GDPR-32 1.a
 
+https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Overview.Encryption.html
 */
 export class DatabaseInstance extends rds.DatabaseInstance {
   constructor(scope: cdk.Construct, id: string, props: DatabaseInstanceProps) {

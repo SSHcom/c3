@@ -59,10 +59,22 @@ class JustAlias extends cdk.Resource implements kms.IAlias {
   }  
 }
 
+/*
+
+Crypto interface injects KMS Key into component properties
+*/
+export interface Crypto {
+  /* An alias to KMS key, use c3.kms.fromAlias(...) to build alias from literal value */
+  readonly kmsKey: kms.IAlias
+}
+
 
 /*
 
-SymmetricKey applies best practice on kms.Key
+SymmetricKey makes on kms.Key compliant with
+ - CIS 2.8
+ - GDPR-25 enabler
+ - GDPR 32 enabler
 
 * Key Alias
 https://docs.aws.amazon.com/kms/latest/developerguide/programming-aliases.html
@@ -85,15 +97,7 @@ export class SymmetricKey extends kms.Key {
   }
 }
 
-/*
-
-symmetricKeyProps makes kms.KeyProps compliant with
- - CIS 2.8
- - GDPR-25 enabler
- - GDPR 32 enabler
-
-*/
-export const symmetricKeyProps = ({
+const symmetricKeyProps = ({
   enableKeyRotation,
   trustAccountIdentities,
   removalPolicy,

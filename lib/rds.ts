@@ -7,17 +7,16 @@
 //
 import * as cdk from '@aws-cdk/core'
 import * as rds from '@aws-cdk/aws-rds'
-import * as kms from '@aws-cdk/aws-kms'
+import { Crypto } from './kms'
+
 
 /*
 
 DatabaseInstanceProps is an extended property of rds.DatabaseInstanceProps
 that requires usage of encryption key.
 */
-export interface DatabaseInstanceProps extends Omit<rds.DatabaseInstanceProps, 'kmsKey'> {
-  /* An alias to KMS key, use c3.kms.fromAlias(...) to build alias from literal value */
-  readonly kmsKey: kms.IAlias
-}
+export type DatabaseInstanceProps =
+  Omit<rds.DatabaseInstanceProps, 'kmsKey'> & Crypto
 
 /*
 

@@ -7,3 +7,4 @@
 //
 export import kms = require('./kms')
 export import efs = require('./efs')
+export import rds = require('./rds')

@@ -14,16 +14,16 @@ import * as iam from '@aws-cdk/aws-iam'
 fromAlias just creates kms.IAlias compatible readonly instance of key alias
 */
 export const fromAlias = (scope: cdk.Construct, id: string): kms.IAlias => {
-  return new JustAlias(scope, id)
+  return new JustAlias(scope, id, id)
 } 
 
 class JustAlias extends cdk.Resource implements kms.IAlias {
   public readonly aliasName: string;
   public readonly aliasTargetKey: kms.IKey;
 
-  constructor(scope: cdk.Construct, id: string) {
+  constructor(scope: cdk.Construct, id: string, alias: string) {
     super(scope, id)
-    this.aliasName = id
+    this.aliasName = alias
   }
 
   public get keyArn(): string {
@@ -91,9 +91,14 @@ Once key is created in your account. It is re-usable across stacks:
   key.grantDecrypt( iam.IRole )
 */
 export class SymmetricKey extends kms.Key {
+  public readonly alias: kms.IAlias
+
   constructor(scope: cdk.Construct, id: string, props: kms.KeyProps = {}) {
     const { alias, ...other } = props
-    super(scope, id, symmetricKeyProps({ alias: alias || id, ...other }))
+    const keyAlias = alias || id
+    super(scope, id, symmetricKeyProps({ alias: keyAlias, ...other }))
+
+    this.alias = new JustAlias(scope, `alias/${keyAlias}`, keyAlias)
     cdk.Tag.add(this, 'stack', cdk.Aws.STACK_NAME)
   }
 }

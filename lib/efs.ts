@@ -1,4 +1,3 @@
-
 //
 // Copyright (C) 2020 SSH Communications Security Corp.
 //

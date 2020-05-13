@@ -19,16 +19,18 @@ Please find details about supported controls in [the checklists](doc/checklist.m
 The latest version of the library is available at `master` branch of the repository. All development, including new features and bug fixes, take place on the `master` branch using forking and pull requests as described in contribution guidelines.
 
 ```bash
-npm install --save @ssh/c3
+npm install --save @ssh.com/c3
 ```
 
 Use components provided by the library:
 
 ```typescript
-import { kms } from '@ssh.com/c3'
+import * as c3 from '@ssh.com/c3'
 
 const stack = new cdk.Stack()
-new kms.SymmetricKey(stack, 'MyKey')
+new c3.kms.SymmetricKey(stack, 'MyKey')
+new c3.efs.FileSystem(stack, 'MyEFS', /* ... */)
+new c3.rds.DatabaseInstance(stack, 'MyRDS', /* ... */)
 ```
 
 ## How To Contribute

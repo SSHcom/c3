@@ -11,7 +11,71 @@ import * as iam from '@aws-cdk/aws-iam'
 
 /*
 
-SymmetricKey applies best practice on kms.Key
+fromAlias just creates kms.IAlias compatible readonly instance of key alias
+*/
+export const fromAlias = (scope: cdk.Construct, id: string): kms.IAlias => {
+  return new JustAlias(scope, id, id)
+} 
+
+class JustAlias extends cdk.Resource implements kms.IAlias {
+  public readonly aliasName: string;
+  public readonly aliasTargetKey: kms.IKey;
+
+  constructor(scope: cdk.Construct, id: string, alias: string) {
+    super(scope, id)
+    this.aliasName = alias
+  }
+
+  public get keyArn(): string {
+    //TODO: alias arn
+    return (null as unknown) as string
+  }
+
+  public get keyId(): string {
+    return (null as unknown) as string
+  }
+
+  public addAlias(_alias: string): kms.Alias {
+    return (null as unknown) as kms.Alias
+  }
+
+  public addToResourcePolicy(_statement: iam.PolicyStatement, _allowNoOp?: boolean): void {
+    return
+  }
+
+  public grant(_grantee: iam.IGrantable, ..._actions: string[]): iam.Grant {
+    return (null as unknown) as iam.Grant
+  }
+
+  public grantDecrypt(_grantee: iam.IGrantable): iam.Grant {
+    return (null as unknown) as iam.Grant
+  }
+
+  public grantEncrypt(_grantee: iam.IGrantable): iam.Grant {
+    return (null as unknown) as iam.Grant
+  }
+
+  public grantEncryptDecrypt(_grantee: iam.IGrantable): iam.Grant {
+    return (null as unknown) as iam.Grant
+  }  
+}
+
+/*
+
+Crypto interface injects KMS Key into component properties
+*/
+export interface Crypto {
+  /* An alias to KMS key, use c3.kms.fromAlias(...) to build alias from literal value */
+  readonly kmsKey: kms.IAlias
+}
+
+
+/*
+
+SymmetricKey makes on kms.Key compliant with
+ - CIS 2.8
+ - GDPR-25 enabler
+ - GDPR 32 enabler
 
 * Key Alias
 https://docs.aws.amazon.com/kms/latest/developerguide/programming-aliases.html
@@ -28,9 +92,15 @@ Once key is created in your account. It is re-usable across stacks:
   key.grantDecrypt( iam.IRole )
 */
 export class SymmetricKey extends kms.Key {
+  public readonly alias: kms.IAlias
+
   constructor(scope: cdk.Construct, id: string, props: kms.KeyProps = {}) {
     const { alias, ...other } = props
-    super(scope, id, symmetricKeyProps({ alias: alias || id, ...other }))
+    const keyAlias = alias || id
+    super(scope, id, symmetricKeyProps({ alias: keyAlias, ...other }))
+
+    this.alias = new JustAlias(scope, `alias/${keyAlias}`, keyAlias)
+    cdk.Tag.add(this, 'stack', cdk.Aws.STACK_NAME)
   }
 
   public grantEncryptDecryptLogs() {
@@ -45,15 +115,7 @@ export class SymmetricKey extends kms.Key {
   }
 }
 
-/*
-
-symmetricKeyProps makes kms.KeyProps compliant with
- - CIS 2.8
- - GDPR-25 enabler
- - GDPR 32 enabler
-
-*/
-export const symmetricKeyProps = ({
+const symmetricKeyProps = ({
   enableKeyRotation,
   trustAccountIdentities,
   removalPolicy,

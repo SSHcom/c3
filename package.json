@@ -1,6 +1,6 @@
 {
   "name": "@ssh.com/c3",
-  "version": "0.0.0",
+  "version": "0.3.1",
   "description": "Compliant Cloud Components",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -11,7 +11,7 @@
     "coveralls": "jest --coverage && cat ./coverage/lcov.info | coveralls",
     "prepare": "npm run build",
     "prepublishOnly": "npm run test && npm run lint",
-    "clean": "rm lib/*.js lib/index.d.ts && rm -Rf node_modules"
+    "clean": "rm lib/*.js lib/*.d.ts && rm -Rf node_modules"
   },
   "author": {
     "name": "SSH Communications Security Corp",
@@ -27,7 +27,11 @@
     "@types/node": "13.13.5",
     "@aws-cdk/core": "*",
     "@aws-cdk/aws-kms": "*",
-    "@aws-cdk/aws-iam": "*"
+    "@aws-cdk/aws-iam": "*",
+    "@aws-cdk/aws-efs": "*",
+    "@aws-cdk/aws-ec2": "*",
+    "@aws-cdk/aws-rds": "*",
+    "@aws-cdk/aws-s3": "*"
   },
   "devDependencies": {
     "@types/jest": "^25.2.1",

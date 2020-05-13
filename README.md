@@ -29,8 +29,10 @@ import * as c3 from '@ssh.com/c3'
 
 const stack = new cdk.Stack()
 new c3.kms.SymmetricKey(stack, 'MyKey')
+new c3.logs.LogGroup(stack, 'MyLogs', /* ... */)
 new c3.efs.FileSystem(stack, 'MyEFS', /* ... */)
 new c3.rds.DatabaseInstance(stack, 'MyRDS', /* ... */)
+new c3.s3.Bucket(stack, 'MyS3', /* ... */)
 ```
 
 ## How To Contribute

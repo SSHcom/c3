@@ -27,8 +27,7 @@ class JustAlias extends cdk.Resource implements kms.IAlias {
   }
 
   public get keyArn(): string {
-    //TODO: alias arn
-    return (null as unknown) as string
+    return `arn:aws:kms:${cdk.Aws.REGION}:${cdk.Aws.ACCOUNT_ID}:${this.aliasName}`
   }
 
   public get keyId(): string {

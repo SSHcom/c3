@@ -25,7 +25,7 @@ ProjectProps is an extended property of codebuild.ProjectProps
 that requires usage of encryption key.
 */
 export type ProjectProps = 
-  Omit<codebuild.ProjectProps, 'encryptionKey'> & LogConfig
+  codebuild.ProjectProps & LogConfig
 
 
 /*

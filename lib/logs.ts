@@ -48,7 +48,9 @@ export class LogGroup extends cdk.Construct {
     //
     const fn = new lambda.SingletonFunction(this, 'C3LogGroupLambda', {
       uuid: 'C3LogGroup',
-      code: new lambda.InlineCode(readFileSync('lib/cfn/logs.js', { encoding: 'utf-8' })),
+      code: new lambda.InlineCode(
+        readFileSync(__dirname + '/cfn/logs.js', { encoding: 'utf-8' })
+      ),
       handler: 'index.handler',
       timeout: cdk.Duration.seconds(300),
       runtime: lambda.Runtime.NODEJS_12_X,

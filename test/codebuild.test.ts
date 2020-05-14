@@ -17,7 +17,6 @@ it('c3.codebuild.Project logs are compliant with GDPR 25',
     })
 
     new c3.codebuild.Project(stack, 'MyCodeBuild', {
-      kmsKey,
       logsConfig,
       buildSpec: codebuild.BuildSpec.fromObject({}),
     })

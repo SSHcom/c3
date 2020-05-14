@@ -7,7 +7,6 @@
 //
 import * as cdk from '@aws-cdk/core'
 import * as codebuild from '@aws-cdk/aws-codebuild'
-import { Crypto } from './kms'
 import * as logs from './logs'
 
 
@@ -26,7 +25,7 @@ ProjectProps is an extended property of codebuild.ProjectProps
 that requires usage of encryption key.
 */
 export type ProjectProps = 
-  Omit<codebuild.ProjectProps, 'encryptionKey'> & LogConfig & Crypto
+  Omit<codebuild.ProjectProps, 'encryptionKey'> & LogConfig
 
 
 /*
@@ -39,7 +38,7 @@ and by default, which makes it compliant with
 */
 export class Project extends codebuild.Project {
   constructor(scope: cdk.Construct, id: string, props: ProjectProps) {
-    const { logsConfig, kmsKey, ...other } = props
+    const { logsConfig, ...other } = props
     super(scope, id, other)
 
     const cb = this.node.defaultChild as codebuild.CfnProject

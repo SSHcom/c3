@@ -34,9 +34,11 @@ with KMS Key. It is only possible via cli or direct api calls.
 https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/encrypt-log-data-kms.html
 */
 export class LogGroup extends cdk.Construct {
+  readonly logGroupName?: string
 
   constructor(scope: cdk.Construct, id: string, props: LogGroupProps) {
-    super(scope, id);
+    super(scope, id)
+    this.logGroupName = props.logGroupName
 
     //
     const role = new iam.Role(this, 'C3LogGroupRole', {

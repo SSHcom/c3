@@ -33,6 +33,7 @@
     "@aws-cdk/aws-rds": "*",
     "@aws-cdk/aws-s3": "*",
     "@aws-cdk/aws-logs": "*",
+    "@aws-cdk/aws-codebuild": "*",
     "@aws-cdk/aws-lambda": "*",
     "@aws-cdk/aws-cloudformation": "*"
   },

@@ -27,6 +27,23 @@ const allowRootAccess = {
   Resource: '*',
 }
 
+const allowCloudWatch = {
+  Action: [
+    'kms:Encrypt*',
+    'kms:Decrypt*',
+    'kms:ReEncrypt*',
+    'kms:GenerateDataKey*',
+    'kms:Describe*',
+  ],
+  Effect: 'Allow',
+  Principal: {
+    Service: {
+      'Fn::Join': ['', ['logs.', { Ref: 'AWS::Region' }, '.amazonaws.com' ]],
+    }
+  },
+  Resource: '*',
+}
+
 it('symmetric kms.Key compliant with CIS 2.8',
   () => {
     const stack = new cdk.Stack()
@@ -74,6 +91,35 @@ it('symmetric kms.Key defines an alias',
   }
 )
 
+it('symmetric kms.Key grants encrypt/decrypt to logs',
+  () => {
+    const stack = new cdk.Stack()
+    const key = new c3.kms.SymmetricKey(stack, 'MyKey')
+    key.grantEncryptDecryptLogs()
+
+    const expect = {
+      Properties: {
+        EnableKeyRotation: true,
+        KeyPolicy: {
+          Statement: [allowRootAccess, allowCloudWatch],
+          Version: '2012-10-17',
+        },
+        Tags: [
+          {
+            Key: "stack",
+            Value: { Ref: "AWS::StackName" },
+          },
+        ]
+      },
+      DeletionPolicy: 'Retain',
+      UpdateReplacePolicy: 'Retain',
+    }
+
+    assert.expect(stack).to(assert.countResources('AWS::KMS::Key', 1))
+    assert.expect(stack).to(assert.haveResource('AWS::KMS::Key', expect, assert.ResourcePart.CompleteDefinition))
+  }
+)
+
 it('fromAlias creates a kms.IAlias, that does nothing',
   () => {
     const stack = new cdk.Stack()
@@ -81,7 +127,7 @@ it('fromAlias creates a kms.IAlias, that does nothing',
     const role = new iam.ArnPrincipal(`arn:aws:iam::${cdk.Aws.ACCOUNT_ID}:role/Role`)
     
     expect(key.addAlias('other')).toBeNull()
-    expect(key.keyArn).toBeNull()
+    expect(key.keyArn).toBe("arn:aws:kms:${Token[AWS::Region.4]}:${Token[AWS::AccountId.0]}:alias/key")
     expect(key.keyId).toBeNull()
     expect(key.grant(role)).toBeNull()
     expect(key.grantDecrypt(role)).toBeNull()

@@ -27,7 +27,7 @@ class JustAlias extends cdk.Resource implements kms.IAlias {
   }
 
   public get keyArn(): string {
-    return (null as unknown) as string
+    return `arn:aws:kms:${cdk.Aws.REGION}:${cdk.Aws.ACCOUNT_ID}:${this.aliasName}`
   }
 
   public get keyId(): string {
@@ -100,6 +100,17 @@ export class SymmetricKey extends kms.Key {
 
     this.alias = new JustAlias(scope, `alias/${keyAlias}`, keyAlias)
     cdk.Tag.add(this, 'stack', cdk.Aws.STACK_NAME)
+  }
+
+  public grantEncryptDecryptLogs() {
+    return this.grant(
+      new iam.ServicePrincipal(`logs.${cdk.Aws.REGION}.amazonaws.com`),
+      'kms:Encrypt*',
+      'kms:Decrypt*',
+      'kms:ReEncrypt*',
+      'kms:GenerateDataKey*',
+      'kms:Describe*',
+    )
   }
 }
 

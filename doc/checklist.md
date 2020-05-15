@@ -78,7 +78,7 @@ cloud components compliant with few GDPR articles, the full set of articles is a
 - [ ] GDPR-6: Lawfulness of processing
 - [ ] GDPR-17: Right to erasure ('right to be forgotten')
 - [ ] GDPR-20: Right to data portability
-- [ ] GDPR-25: Data protection by design and by default
+- [x] GDPR-25: Data protection by design and by default
 - [ ] GDPR-30: Records of processing activities
 - [ ] GDPR-32: Security of processing
 - [ ] GDPR-33: Notification of a personal data breach to the supervisory authority

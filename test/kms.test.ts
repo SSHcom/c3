@@ -67,7 +67,7 @@ it('symmetric kms.Key compliant with CIS 2.8',
       UpdateReplacePolicy: 'Retain',
     }
 
-    expect(key.alias.aliasName).toBe('MyKey')
+    expect(key.alias.aliasName).toBe('alias/MyKey')
     expect(key.alias.aliasTargetKey).toBeUndefined()
     assert.expect(stack).to(assert.countResources('AWS::KMS::Key', 1))
     assert.expect(stack).to(assert.haveResource('AWS::KMS::Key', expectKey, assert.ResourcePart.CompleteDefinition))

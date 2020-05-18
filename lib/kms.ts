@@ -95,10 +95,10 @@ export class SymmetricKey extends kms.Key {
 
   constructor(scope: cdk.Construct, id: string, props: kms.KeyProps = {}) {
     const { alias, ...other } = props
-    const keyAlias = alias || id
+    const keyAlias = alias || `alias/${id}`
     super(scope, id, symmetricKeyProps({ alias: keyAlias, ...other }))
 
-    this.alias = new JustAlias(scope, `alias/${keyAlias}`, keyAlias)
+    this.alias = new JustAlias(scope, keyAlias, keyAlias)
     cdk.Tag.add(this, 'stack', cdk.Aws.STACK_NAME)
   }
 

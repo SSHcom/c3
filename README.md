@@ -64,6 +64,7 @@ new c3.efs.FileSystem(stack, 'MyEFS', /* ... */)
 new c3.rds.DatabaseInstance(stack, 'MyRDS', /* ... */)
 new c3.s3.Bucket(stack, 'MyS3', /* ... */)
 new c3.codebuild.Project(stack, 'MyCodeBuild', /* ... */)
+new c3.secretsmanager.Secret(stack, 'MySecret', /* ... */)
 ```
 
 ## How To Contribute

@@ -1,6 +1,6 @@
 {
   "name": "@ssh.com/c3",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "Compliant Cloud Components",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -34,6 +34,7 @@
     "@aws-cdk/aws-s3": "*",
     "@aws-cdk/aws-logs": "*",
     "@aws-cdk/aws-codebuild": "*",
+    "@aws-cdk/aws-secretsmanager": "*",
     "@aws-cdk/aws-lambda": "*",
     "@aws-cdk/aws-cloudformation": "*"
   },

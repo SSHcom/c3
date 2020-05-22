@@ -27,13 +27,13 @@ const allowRootAccess = {
   Resource: '*',
 }
 
-const allowCloudWatch = {
+const allowCloudWatchLogs = {
   Action: [
-    'kms:Encrypt*',
-    'kms:Decrypt*',
+    'kms:Encrypt',
+    'kms:Decrypt',
     'kms:ReEncrypt*',
     'kms:GenerateDataKey*',
-    'kms:Describe*',
+    'kms:DescribeKey',
   ],
   Effect: 'Allow',
   Principal: {
@@ -43,6 +43,27 @@ const allowCloudWatch = {
   },
   Resource: '*',
 }
+
+const allowSecretManager = {
+  Action: [
+    'kms:Encrypt',
+    'kms:Decrypt',
+    'kms:ReEncrypt*',
+    'kms:GenerateDataKey*',
+    'kms:CreateGrant',
+    'kms:DescribeKey',
+  ],
+  Effect: 'Allow',
+  Principal: '*',
+  Resource: '*',
+  Condition: {
+    'kms:CallerAccount': { Ref: 'AWS::AccountId' },
+    'kms:ViaService': {
+      'Fn::Join': ['', ['secretsmanager.', { Ref: 'AWS::Region' }, '.amazonaws.com' ]]
+    }
+  },
+}
+
 
 it('symmetric kms.Key compliant with CIS 2.8',
   () => {
@@ -91,17 +112,52 @@ it('symmetric kms.Key defines an alias',
   }
 )
 
-it('symmetric kms.Key grants encrypt/decrypt to logs',
+it('symmetric kms.Key defines an policy',
+  () => {
+    const stack = new cdk.Stack()
+    new c3.kms.SymmetricKey(stack, 'MyKey')
+
+    const expect = {
+      PolicyDocument: {
+        Statement: [
+          {
+            Action: [
+              "kms:Decrypt",
+              "kms:DescribeKey",
+              "kms:Encrypt",
+              "kms:GenerateDataKey*",
+              "kms:ReEncrypt*"
+            ],
+            Effect: "Allow",
+            Resource: { "Fn::GetAtt": ["MyKey6AB29FA6", "Arn"] }
+          }
+        ],
+        Version: "2012-10-17"
+      },
+      Description: "",
+      ManagedPolicyName: "allow-use-MyKey",
+      Path: "/",
+    }
+
+    assert.expect(stack).to(assert.countResources('AWS::IAM::ManagedPolicy', 1))
+    assert.expect(stack).to(assert.haveResource('AWS::IAM::ManagedPolicy', expect))
+  }
+)
+
+
+it('symmetric kms.Key grants encrypt/decrypt via service',
   () => {
     const stack = new cdk.Stack()
     const key = new c3.kms.SymmetricKey(stack, 'MyKey')
-    key.grantEncryptDecryptLogs()
+    key.grantViaService(
+      new iam.ServicePrincipal(`secretsmanager.${cdk.Aws.REGION}.amazonaws.com`)
+    )
 
     const expect = {
       Properties: {
         EnableKeyRotation: true,
         KeyPolicy: {
-          Statement: [allowRootAccess, allowCloudWatch],
+          Statement: [allowRootAccess, allowSecretManager],
           Version: '2012-10-17',
         },
         Tags: [
@@ -119,6 +175,39 @@ it('symmetric kms.Key grants encrypt/decrypt to logs',
     assert.expect(stack).to(assert.haveResource('AWS::KMS::Key', expect, assert.ResourcePart.CompleteDefinition))
   }
 )
+
+
+it('symmetric kms.Key grants encrypt/decrypt to service',
+  () => {
+    const stack = new cdk.Stack()
+    const key = new c3.kms.SymmetricKey(stack, 'MyKey')
+    key.grantToService(
+      new iam.ServicePrincipal(`logs.${cdk.Aws.REGION}.amazonaws.com`)
+    )
+
+    const expect = {
+      Properties: {
+        EnableKeyRotation: true,
+        KeyPolicy: {
+          Statement: [allowRootAccess, allowCloudWatchLogs],
+          Version: '2012-10-17',
+        },
+        Tags: [
+          {
+            Key: "stack",
+            Value: { Ref: "AWS::StackName" },
+          },
+        ]
+      },
+      DeletionPolicy: 'Retain',
+      UpdateReplacePolicy: 'Retain',
+    }
+
+    assert.expect(stack).to(assert.countResources('AWS::KMS::Key', 1))
+    assert.expect(stack).to(assert.haveResource('AWS::KMS::Key', expect, assert.ResourcePart.CompleteDefinition))
+  }
+)
+
 
 it('fromAlias creates a kms.IAlias, that does nothing',
   () => {

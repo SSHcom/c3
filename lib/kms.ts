@@ -92,24 +92,67 @@ Once key is created in your account. It is re-usable across stacks:
 */
 export class SymmetricKey extends kms.Key {
   public readonly alias: kms.IAlias
+  public readonly accessPolicy: iam.IManagedPolicy
 
   constructor(scope: cdk.Construct, id: string, props: kms.KeyProps = {}) {
     const { alias, ...other } = props
     const keyAlias = alias || `alias/${id}`
     super(scope, id, symmetricKeyProps({ alias: keyAlias, ...other }))
 
+    this.accessPolicy = new iam.ManagedPolicy(this, 'Policy', {
+      managedPolicyName: `allow-use-${id}`,
+      statements: [
+        new iam.PolicyStatement({
+          actions: [
+            "kms:Decrypt",
+            "kms:DescribeKey",
+            "kms:Encrypt",
+            "kms:GenerateDataKey*",
+            "kms:ReEncrypt*",
+          ],
+          resources: [this.keyArn],
+        }),
+      ]
+    })
+
     this.alias = new JustAlias(scope, keyAlias, keyAlias)
     cdk.Tag.add(this, 'stack', cdk.Aws.STACK_NAME)
   }
 
-  public grantEncryptDecryptLogs() {
-    return this.grant(
-      new iam.ServicePrincipal(`logs.${cdk.Aws.REGION}.amazonaws.com`),
-      'kms:Encrypt*',
-      'kms:Decrypt*',
+  //
+  // Allow Access through the AWS Service in the account
+  // that are authorized to use the AWS Service
+  //   key.grantViaService(
+  //     new iam.ServicePrincipal(`secretsmanager.${cdk.Aws.REGION}.amazonaws.com`)
+  //   )
+  public grantViaService(principal: iam.ServicePrincipal): iam.Grant {
+    const grant = this.grant(
+      new iam.ArnPrincipal('*'),
+      'kms:Encrypt',
+      'kms:Decrypt',
       'kms:ReEncrypt*',
       'kms:GenerateDataKey*',
-      'kms:Describe*',
+      'kms:CreateGrant',
+      'kms:DescribeKey',
+    )
+    grant.resourceStatement?.addCondition('kms:CallerAccount', cdk.Aws.ACCOUNT_ID)
+    grant.resourceStatement?.addCondition('kms:ViaService', principal.service)
+    return grant
+  }
+
+  //
+  // Allow access to the service
+  //   key.grantViaService(
+  //     new iam.ServicePrincipal(`logs.${cdk.Aws.REGION}.amazonaws.com`)
+  //   )
+  public grantToService(principal: iam.ServicePrincipal): iam.Grant {
+    return this.grant(
+      principal,
+      'kms:Encrypt',
+      'kms:Decrypt',
+      'kms:ReEncrypt*',
+      'kms:GenerateDataKey*',
+      'kms:DescribeKey',
     )
   }
 }

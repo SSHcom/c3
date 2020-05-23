@@ -60,4 +60,10 @@ As an application developer you have to decouple key management and usage to dif
 
 ## Conclusion
 
-It is a responsibility of software engineers to retain confidentiality of sensitive data in they applications. The usage of cloud service offers a variety of products to deal with data encryptions, which works transparently inside cloud services. This library facilitates engineers with additional best practices and well-known security controls on crypto key management. 
+It is a responsibility of software engineers to retain confidentiality of sensitive data in they applications. The usage of cloud service offers a variety of products to deal with data encryptions, which works transparently inside cloud services. This library facilitates engineers with additional best practices and well-known security controls on crypto key management. You can find more about KMS hint and tips from [AWS White Paper](https://d0.awsstatic.com/whitepapers/aws-kms-best-practices.pdf).
+
+
+## References
+
+* [AWS Key Management Service Best Practices](https://aws.amazon.com/blogs/security/new-whitepaper-available-aws-key-management-service-best-practices/)
+

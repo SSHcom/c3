@@ -162,10 +162,10 @@ export class SymmetricKey extends kms.Key {
       'kms:CreateGrant',
       'kms:DescribeKey',
     )
-    if (grant.resourceStatement) {
-      grant.resourceStatement.addCondition('kms:CallerAccount', cdk.Aws.ACCOUNT_ID)
-      grant.resourceStatement.addCondition('kms:ViaService', principal.service)
-    }
+    // Note: the resource statement is always defined for KMS grant
+    const statement = grant.resourceStatement as iam.PolicyStatement
+    statement.addCondition('kms:CallerAccount', cdk.Aws.ACCOUNT_ID)
+    statement.addCondition('kms:ViaService', principal.service)
     return grant
   }
 

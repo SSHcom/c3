@@ -99,8 +99,8 @@ export class SymmetricKey extends kms.Key {
     const keyAlias = alias || `alias/${id}`
     super(scope, id, symmetricKeyProps({ alias: keyAlias, ...other }))
 
-    this.accessPolicy = new iam.ManagedPolicy(this, 'Policy', {
-      managedPolicyName: `allow-use-${id}`,
+    this.accessPolicy = new iam.ManagedPolicy(this, 'PolicyFullAccess', {
+      managedPolicyName: `allow-crypto-${id}`,
       statements: [
         new iam.PolicyStatement({
           actions: [
@@ -109,6 +109,33 @@ export class SymmetricKey extends kms.Key {
             "kms:Encrypt",
             "kms:GenerateDataKey*",
             "kms:ReEncrypt*",
+          ],
+          resources: [this.keyArn],
+        }),
+      ]
+    })
+
+    this.accessPolicy = new iam.ManagedPolicy(this, 'PolicyEncrypt', {
+      managedPolicyName: `allow-encrypt-${id}`,
+      statements: [
+        new iam.PolicyStatement({
+          actions: [
+            "kms:DescribeKey",
+            "kms:Encrypt",
+            "kms:ReEncrypt*",
+          ],
+          resources: [this.keyArn],
+        }),
+      ]
+    })
+
+    this.accessPolicy = new iam.ManagedPolicy(this, 'PolicyDecrypt', {
+      managedPolicyName: `allow-decrypt-${id}`,
+      statements: [
+        new iam.PolicyStatement({
+          actions: [
+            "kms:Decrypt",
+            "kms:DescribeKey",
           ],
           resources: [this.keyArn],
         }),

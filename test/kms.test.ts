@@ -117,7 +117,7 @@ it('symmetric kms.Key defines an policy',
     const stack = new cdk.Stack()
     new c3.kms.SymmetricKey(stack, 'MyKey')
 
-    const expect = {
+    const expectEncryptDecrypt = {
       PolicyDocument: {
         Statement: [
           {
@@ -135,12 +135,53 @@ it('symmetric kms.Key defines an policy',
         Version: "2012-10-17"
       },
       Description: "",
-      ManagedPolicyName: "allow-use-MyKey",
+      ManagedPolicyName: "allow-crypto-MyKey",
       Path: "/",
     }
 
-    assert.expect(stack).to(assert.countResources('AWS::IAM::ManagedPolicy', 1))
-    assert.expect(stack).to(assert.haveResource('AWS::IAM::ManagedPolicy', expect))
+    const expectEncrypt = {
+      PolicyDocument: {
+        Statement: [
+          {
+            Action: [
+              "kms:DescribeKey",
+              "kms:Encrypt",
+              "kms:ReEncrypt*"
+            ],
+            Effect: "Allow",
+            Resource: { "Fn::GetAtt": ["MyKey6AB29FA6", "Arn"] }
+          }
+        ],
+        Version: "2012-10-17"
+      },
+      Description: "",
+      ManagedPolicyName: "allow-encrypt-MyKey",
+      Path: "/",
+    }
+
+    const expectDecrypt = {
+      PolicyDocument: {
+        Statement: [
+          {
+            Action: [
+              "kms:Decrypt",
+              "kms:DescribeKey",
+            ],
+            Effect: "Allow",
+            Resource: { "Fn::GetAtt": ["MyKey6AB29FA6", "Arn"] }
+          }
+        ],
+        Version: "2012-10-17"
+      },
+      Description: "",
+      ManagedPolicyName: "allow-decrypt-MyKey",
+      Path: "/",
+    }
+
+    assert.expect(stack).to(assert.countResources('AWS::IAM::ManagedPolicy', 3))
+    assert.expect(stack).to(assert.haveResource('AWS::IAM::ManagedPolicy', expectEncryptDecrypt))
+    assert.expect(stack).to(assert.haveResource('AWS::IAM::ManagedPolicy', expectEncrypt))
+    assert.expect(stack).to(assert.haveResource('AWS::IAM::ManagedPolicy', expectDecrypt))
   }
 )
 

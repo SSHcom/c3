@@ -22,25 +22,28 @@ The latest version of the library is available at `master` branch of the reposit
 npm install --save @ssh.com/c3
 ```
 
-The library acts as an overlay for existing AWS CDK components. Its design principle to minimize effort required to enable compliancy features. For example:
+The library acts as an overlay for existing AWS CDK components. It aims to minimize effort required to enable compliancy with privacy and security best practices. For example:
 
 ```typescript
 //
-// You have following construct that creates S3 bucket
+// Your CDK application creates S3 bucket
 import * as s3 from '@aws-cdk/aws-s3'
 
 new s3.Bucket(stack, 'MyS3', /* ... */)
 
 //
-// It requires you make following changes to the code
+// It is easy to enable its encryption and disable public access,
+// hence making it compliant with GDPR-25 and GDPR-32 1.a.
+// 
+// Just make following changes:
 import * as c3 from '@ssh.com/c3'
 
 const kmsKey = c3.kms.fromAlias(stack, 'alias/MyKey')
 new c3.s3.Bucket(stack, 'MyS3', { kmsKey, /* ... */ })
 ```
 
-Please notice that each component that enforces encryption requires
-mandatory `kmsKey: kms.IAlias` parameter. The [KMS Alias](https://docs.aws.amazon.com/kms/latest/developerguide/programming-aliases.html) is used intentionally to allow flexibility on key management. We do also recommend to create and use key from different stacks. It prevents accidental deletion of key while you dispose an application.   
+Please notice that each component enforces encryption and requires
+mandatory `kmsKey: kms.IAlias` parameter. The [KMS Alias](https://docs.aws.amazon.com/kms/latest/developerguide/programming-aliases.html) is used intentionally to allow flexibility on key management. We do also recommend to create and use key from different stacks. It prevents accidental deletion of key while you dispose an application. See more about KMS key design at 𝗖𝟯 library [here](./doc/kms-key.md).
 
 ```typescript
 //

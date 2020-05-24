@@ -92,24 +92,98 @@ Once key is created in your account. It is re-usable across stacks:
 */
 export class SymmetricKey extends kms.Key {
   public readonly alias: kms.IAlias
+  public readonly accessPolicy: iam.IManagedPolicy
+  public readonly encryptPolicy: iam.IManagedPolicy
+  public readonly decryptPolicy: iam.IManagedPolicy
 
   constructor(scope: cdk.Construct, id: string, props: kms.KeyProps = {}) {
     const { alias, ...other } = props
     const keyAlias = alias || `alias/${id}`
     super(scope, id, symmetricKeyProps({ alias: keyAlias, ...other }))
 
+    this.accessPolicy = new iam.ManagedPolicy(this, 'PolicyFullAccess', {
+      managedPolicyName: `allow-crypto-${id}`,
+      statements: [
+        new iam.PolicyStatement({
+          actions: [
+            "kms:Decrypt",
+            "kms:DescribeKey",
+            "kms:Encrypt",
+            "kms:GenerateDataKey*",
+            "kms:ReEncrypt*",
+          ],
+          resources: [this.keyArn],
+        }),
+      ]
+    })
+
+    this.encryptPolicy = new iam.ManagedPolicy(this, 'PolicyEncrypt', {
+      managedPolicyName: `allow-encrypt-${id}`,
+      statements: [
+        new iam.PolicyStatement({
+          actions: [
+            "kms:DescribeKey",
+            "kms:Encrypt",
+            "kms:ReEncrypt*",
+          ],
+          resources: [this.keyArn],
+        }),
+      ]
+    })
+
+    this.decryptPolicy = new iam.ManagedPolicy(this, 'PolicyDecrypt', {
+      managedPolicyName: `allow-decrypt-${id}`,
+      statements: [
+        new iam.PolicyStatement({
+          actions: [
+            "kms:Decrypt",
+            "kms:DescribeKey",
+          ],
+          resources: [this.keyArn],
+        }),
+      ]
+    })
+
     this.alias = new JustAlias(scope, keyAlias, keyAlias)
     cdk.Tag.add(this, 'stack', cdk.Aws.STACK_NAME)
   }
 
-  public grantEncryptDecryptLogs() {
-    return this.grant(
-      new iam.ServicePrincipal(`logs.${cdk.Aws.REGION}.amazonaws.com`),
-      'kms:Encrypt*',
-      'kms:Decrypt*',
+  //
+  // Allow Access through the AWS Service in the account
+  // that are authorized to use the AWS Service
+  //   key.grantViaService(
+  //     new iam.ServicePrincipal(`secretsmanager.${cdk.Aws.REGION}.amazonaws.com`)
+  //   )
+  public grantViaService(principal: iam.ServicePrincipal): iam.Grant {
+    const grant = this.grant(
+      new iam.ArnPrincipal('*'),
+      'kms:Encrypt',
+      'kms:Decrypt',
       'kms:ReEncrypt*',
       'kms:GenerateDataKey*',
-      'kms:Describe*',
+      'kms:CreateGrant',
+      'kms:DescribeKey',
+    )
+    // Note: the resource statement is always defined for KMS grant
+    const statement = grant.resourceStatement as iam.PolicyStatement
+    statement.addCondition('kms:CallerAccount', cdk.Aws.ACCOUNT_ID)
+    statement.addCondition('kms:ViaService', principal.service)
+    return grant
+  }
+
+  //
+  // Allow access to the service
+  //   key.grantViaService(
+  //     new iam.ServicePrincipal(`logs.${cdk.Aws.REGION}.amazonaws.com`)
+  //   )
+  public grantToService(principal: iam.ServicePrincipal): iam.Grant {
+    return this.grant(
+      principal,
+      'kms:Encrypt',
+      'kms:Decrypt',
+      'kms:ReEncrypt*',
+      'kms:GenerateDataKey*',
+      'kms:DescribeKey',
     )
   }
 }

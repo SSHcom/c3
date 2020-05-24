@@ -93,6 +93,8 @@ Once key is created in your account. It is re-usable across stacks:
 export class SymmetricKey extends kms.Key {
   public readonly alias: kms.IAlias
   public readonly accessPolicy: iam.IManagedPolicy
+  public readonly encryptPolicy: iam.IManagedPolicy
+  public readonly decryptPolicy: iam.IManagedPolicy
 
   constructor(scope: cdk.Construct, id: string, props: kms.KeyProps = {}) {
     const { alias, ...other } = props
@@ -115,7 +117,7 @@ export class SymmetricKey extends kms.Key {
       ]
     })
 
-    this.accessPolicy = new iam.ManagedPolicy(this, 'PolicyEncrypt', {
+    this.encryptPolicy = new iam.ManagedPolicy(this, 'PolicyEncrypt', {
       managedPolicyName: `allow-encrypt-${id}`,
       statements: [
         new iam.PolicyStatement({
@@ -129,7 +131,7 @@ export class SymmetricKey extends kms.Key {
       ]
     })
 
-    this.accessPolicy = new iam.ManagedPolicy(this, 'PolicyDecrypt', {
+    this.decryptPolicy = new iam.ManagedPolicy(this, 'PolicyDecrypt', {
       managedPolicyName: `allow-decrypt-${id}`,
       statements: [
         new iam.PolicyStatement({

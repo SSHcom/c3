@@ -115,7 +115,7 @@ it('symmetric kms.Key defines an alias',
 it('symmetric kms.Key defines an policy',
   () => {
     const stack = new cdk.Stack()
-    new c3.kms.SymmetricKey(stack, 'MyKey')
+    const key = new c3.kms.SymmetricKey(stack, 'MyKey')
 
     const expectEncryptDecrypt = {
       PolicyDocument: {
@@ -182,6 +182,9 @@ it('symmetric kms.Key defines an policy',
     assert.expect(stack).to(assert.haveResource('AWS::IAM::ManagedPolicy', expectEncryptDecrypt))
     assert.expect(stack).to(assert.haveResource('AWS::IAM::ManagedPolicy', expectEncrypt))
     assert.expect(stack).to(assert.haveResource('AWS::IAM::ManagedPolicy', expectDecrypt))
+    expect(key.accessPolicy).toBeDefined()
+    expect(key.encryptPolicy).toBeDefined()
+    expect(key.decryptPolicy).toBeDefined()
   }
 )
 

@@ -26,15 +26,15 @@ Later an application can refer to any alias just using its name
 c3.kms.fromAlias(stack, 'alias/MyKey')
 ```
 
-Keep in-mind, that the library enables an AWS managed yearly rotation schedule for your keys. A new symmetric key is created under-the-hood when the key is due for rotation. This new key is actively used for all new requests to protect information. The old key remains available to decrypt any existing ciphertext. This process is transparent to key user's due to AWS implementation. The key aliases allows you to implement a frequent rotation. Therefore, 𝗖𝟯 prioritize the alias usage over other methods. It **requires** usage of `kms.IAlias` across the library components. The [KMS Alias](https://docs.aws.amazon.com/kms/latest/developerguide/programming-aliases.html) is used intentionally to allow flexibility on key management.
+Keep in-mind, that the library enables yearly rotation got your keys. The rotation is managed by AWS and requires no actions from you. It creates a new symmetric key under-the-hood when it is due for rotation. This new key is actively used for all new requests to protect information. The old key remains available to decrypt any existing ciphertext. This process is transparent to key user. Sometimes, yearly rotation is not enough. The key aliases allows you to implement a frequent rotation schedule. Similarly to AWS managed rotation you can substitute a key behind an alias at any point of time. 𝗖𝟯 prioritize the alias usage over key ARN. It **requires** usage of `kms.IAlias` across the library components. The [KMS Alias](https://docs.aws.amazon.com/kms/latest/developerguide/programming-aliases.html) is used intentionally to allow flexibility on key management.
 
 
 ## Control access through IAM 
 
 CMK and IAM policies are a framework to grant access for usage of keys. The default policy enables the root user in the account and allows to attach IAM policies. For each symmetric key, the library creates managed policies to enforce least privilege. Your application can re-use one of the following policy:
-* `allow-encrypt-MyKey`
-* `allow-decrypt-MyKey`
-* `allow-crypto-MyKey`
+* `allow-encrypt-MyKey` allows only encrypt data with the key
+* `allow-decrypt-MyKey` allows only decrypt data with the key
+* `allow-crypto-MyKey` allows both encrypt/decrypt data
 
 You can re-use the policy with
 

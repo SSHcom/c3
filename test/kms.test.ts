@@ -126,7 +126,8 @@ it('symmetric kms.Key defines an policy',
               "kms:DescribeKey",
               "kms:Encrypt",
               "kms:GenerateDataKey*",
-              "kms:ReEncrypt*"
+              "kms:ReEncrypt*",
+              "kms:CreateGrant",
             ],
             Effect: "Allow",
             Resource: { "Fn::GetAtt": ["MyKey6AB29FA6", "Arn"] }

@@ -111,6 +111,7 @@ export class SymmetricKey extends kms.Key {
             "kms:Encrypt",
             "kms:GenerateDataKey*",
             "kms:ReEncrypt*",
+            "kms:CreateGrant",
           ],
           resources: [this.keyArn],
         }),

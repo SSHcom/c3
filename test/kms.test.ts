@@ -267,7 +267,7 @@ it('fromAlias creates a kms.IAlias, that does nothing',
     expect(key.grantDecrypt(role)).toBeNull()
     expect(key.grantEncrypt(role)).toBeNull()
     expect(key.grantEncryptDecrypt(role)).toBeNull()
-    expect(key.addToResourcePolicy(new iam.PolicyStatement())).toBeUndefined()
+    expect(key.addToResourcePolicy(new iam.PolicyStatement())).toStrictEqual({statementAdded: false})
 
     assert.expect(stack).to(assert.countResources('AWS::KMS::Alias', 0))
   }

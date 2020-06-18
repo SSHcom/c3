@@ -38,8 +38,8 @@ class JustAlias extends cdk.Resource implements kms.IAlias {
     return (null as unknown) as kms.Alias
   }
 
-  public addToResourcePolicy(_statement: iam.PolicyStatement, _allowNoOp?: boolean): void {
-    return
+  public addToResourcePolicy(_statement: iam.PolicyStatement, _allowNoOp?: boolean): iam.AddToResourcePolicyResult {
+    return { statementAdded: false }
   }
 
   public grant(_grantee: iam.IGrantable, ..._actions: string[]): iam.Grant {

@@ -84,3 +84,7 @@ cloud components compliant with few GDPR articles, the full set of articles is a
 - [ ] GDPR-33: Notification of a personal data breach to the supervisory authority
 - [ ] GDPR-44: General principle for transfers
 - [ ] GDPR-89: Safeguards and derogations relating to processing for archiving purposes in the public interest, scientific or historical research purposes or statistical purposes
+
+## ZeroTrust
+
+We wanted to build a solution that only grants access when it's needed & on the level needed. Zero Trust is always (re-)verifying a user before any access is granted.

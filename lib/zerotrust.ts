@@ -13,11 +13,11 @@ import * as asg from '@aws-cdk/aws-autoscaling'
 
 AccessPolicy is applicable to target EC2 instances. The policy resolves
 few security questions:
-- Who can use target machine account?
+- Who can use account on the target machine?
 - How machines in private subnet are accessed?
-- What is the audit policy for the access session
+- What is the audit policy for the access session(s)?
 
-The policy is enforced by 3rd party tools. This policy document is
+The policy is enforced by 3rd party tools using tags. This policy document is
 converted to AWS EC2 Tags.
 */
 export interface AccessPolicy {
@@ -27,17 +27,17 @@ export interface AccessPolicy {
   /* ZeroTrust Gateway Id */
   readonly gateway: string
 
-  /* target host account associated with policy  */
+  /* The account on target host, which is controlled by the policy */
   readonly account?: string
 
-  /* enable audit */ 
+  /* Enables audit */ 
   readonly audit?: boolean
 }
 
 /*
 
-ZeroTrustAutoScalingGroupProps extends asg.AutoScalingGroupProps with
-ZeroTrustAccessPolicy document.
+AutoScalingGroupProps extends asg.AutoScalingGroupProps with
+Zero Trust AccessPolicy document.
 */
 export type AutoScalingGroupProps =
   Omit<asg.AutoScalingGroupProps, 'keyName'> & {zeroTrustAccessPolicy: AccessPolicy}
@@ -45,13 +45,13 @@ export type AutoScalingGroupProps =
 
 /*
 
-ZeroTrustAutoScalingGroup enforces Zero Trust Access principles to EC2
-instances launched by AutoScalingGroup. Zero Trust access policy implies
-that no one has permanent access to the instance. The access is (re-)verifying
-a user before any access is granted. Usually the policy is enforced by 3rd
+AutoScalingGroup enforces Zero Trust Access principles to EC2 instances
+launched by its configuration. Zero Trust access policy implies that no one
+has permanent access to the instance. The access is (re-)verifying
+a user before any access is granted. The policy is enforced by 3rd
 party tools. 
 
-The component replaces management of SSH key via ZeroTrustAccessPolicy and
+The component replaces management of SSH key via Zero Trust AccessPolicy and
 embeds the document into EC2 instances.
 */
 export class AutoScalingGroup extends asg.AutoScalingGroup {

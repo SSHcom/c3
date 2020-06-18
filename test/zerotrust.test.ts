@@ -3,12 +3,12 @@ import * as cdk from '@aws-cdk/core'
 import * as ec2 from '@aws-cdk/aws-ec2'
 import * as c3 from '../lib'
 
-it('xxx',
+it('Zero Trust Access Policy is embedded into AutoScalingGroup',
   () => {
     const stack = new cdk.Stack()
     const vpc = new ec2.Vpc(stack, 'VPC')
     const zeroTrustAccessPolicy: c3.zerotrust.AccessPolicy = {
-      policyName: 'ztpolicy',
+      policyName: 'my-policy',
       gateway: 'extender',
       account: 'ec2-root',
       audit: true,
@@ -26,7 +26,7 @@ it('xxx',
     })
 
     const expectConfig = {
-      KeyName: 'ztpolicy',
+      KeyName: 'my-policy',
     }
 
     assert.expect(stack).to(assert.countResources('AWS::AutoScaling::LaunchConfiguration', 1))
@@ -52,7 +52,7 @@ it('xxx',
         {
           Key: "privx-ssh-principals",
           PropagateAtLaunch: true,
-          Value: "ec2-root=ztpolicy"
+          Value: "ec2-root=my-policy"
         },
       ],
     }

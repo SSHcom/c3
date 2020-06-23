@@ -14,7 +14,7 @@ it('c3.rds.DatabaseInstance compliant with GDPR 25',
       vpc,
       masterUsername: 'test',
       engine: rds.DatabaseInstanceEngine.POSTGRES,
-      instanceClass: new ec2.InstanceType('t3.small'),
+      instanceType: new ec2.InstanceType('t3.small'),
     })
 
     // Note: unit test checks only Properties that impact on compliance 

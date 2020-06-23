@@ -8,7 +8,7 @@ it('Zero Trust Access Policy is embedded into AutoScalingGroup',
     const stack = new cdk.Stack()
     const vpc = new ec2.Vpc(stack, 'VPC')
     const zeroTrustAccessPolicy: c3.zerotrust.AccessPolicy = {
-      policyName: 'my-policy',
+      policyName: 'ztpolicy',
       gateway: 'extender',
       account: 'ec2-root',
       audit: true,
@@ -26,7 +26,7 @@ it('Zero Trust Access Policy is embedded into AutoScalingGroup',
     })
 
     const expectConfig = {
-      KeyName: 'my-policy',
+      KeyName: 'ztpolicy',
     }
 
     assert.expect(stack).to(assert.countResources('AWS::AutoScaling::LaunchConfiguration', 1))
@@ -52,7 +52,58 @@ it('Zero Trust Access Policy is embedded into AutoScalingGroup',
         {
           Key: "privx-ssh-principals",
           PropagateAtLaunch: true,
-          Value: "ec2-root=my-policy"
+          Value: "ec2-root=ztpolicy"
+        },
+      ],
+    }
+
+    assert.expect(stack).to(assert.countResources('AWS::AutoScaling::AutoScalingGroup', 1))
+    assert.expect(stack).to(assert.haveResource('AWS::AutoScaling::AutoScalingGroup', expectAsg))
+  }
+)
+
+it('Zero Trust Access Policy with default parameters is embedded into AutoScalingGroup',
+  () => {
+    const stack = new cdk.Stack()
+    const vpc = new ec2.Vpc(stack, 'VPC')
+    const zeroTrustAccessPolicy: c3.zerotrust.AccessPolicy = {
+      policyName: 'ztpolicy',
+    }
+    const instanceType = new ec2.InstanceType('t3.small')
+    const machineImage = new ec2.AmazonLinuxImage({
+      generation: ec2.AmazonLinuxGeneration.AMAZON_LINUX_2,
+    })
+
+    new c3.zerotrust.AutoScalingGroup(stack, 'MyAsg', {
+      zeroTrustAccessPolicy,
+      vpc,
+      instanceType,
+      machineImage,
+    })
+
+    const expectConfig = {
+      KeyName: 'ztpolicy',
+    }
+
+    assert.expect(stack).to(assert.countResources('AWS::AutoScaling::LaunchConfiguration', 1))
+    assert.expect(stack).to(assert.haveResource('AWS::AutoScaling::LaunchConfiguration', expectConfig))
+
+    const expectAsg = {
+      Tags: [
+        {
+          Key: "Name",
+          PropagateAtLaunch: true,
+          Value: "MyAsg"
+        },
+        {
+          Key: "privx-extender",
+          PropagateAtLaunch: true,
+          Value: "ztpolicy"
+        },
+        {
+          Key: "privx-ssh-principals",
+          PropagateAtLaunch: true,
+          Value: "ec2-user=ztpolicy"
         },
       ],
     }

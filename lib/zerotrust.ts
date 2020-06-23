@@ -25,7 +25,7 @@ export interface AccessPolicy {
   readonly policyName: string
 
   /* ZeroTrust Gateway Id */
-  readonly gateway: string
+  readonly gateway?: string
 
   /* The account on target host, which is controlled by the policy */
   readonly account?: string
@@ -62,8 +62,10 @@ export class AutoScalingGroup extends asg.AutoScalingGroup {
     super(scope, id, { ...other, keyName: policyName })
 
     const sshAccount = account || 'ec2-user'
+    const extender = gateway || policyName
+
     cdk.Tag.add(this, 'privx-ssh-principals', `${sshAccount}=${policyName}`)
-    cdk.Tag.add(this, 'privx-extender', gateway)
+    cdk.Tag.add(this, 'privx-extender', extender)
     if (audit) {
       cdk.Tag.add(this, 'privx-enable-auditing', 'yes')
     }

@@ -145,7 +145,7 @@ export class SymmetricKey extends kms.Key {
       ]
     })
 
-    this.alias = new JustAlias(scope, keyAlias, keyAlias)
+    this.alias = new JustAlias(scope, `alias-${id}`, keyAlias)
     cdk.Tag.add(this, 'stack', cdk.Aws.STACK_NAME)
   }
 

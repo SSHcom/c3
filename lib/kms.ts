@@ -98,8 +98,8 @@ export class SymmetricKey extends kms.Key {
 
   constructor(scope: cdk.Construct, id: string, props: kms.KeyProps = {}) {
     const { alias, ...other } = props
-    const keyAlias = alias || `alias/${id}`
-    super(scope, id, symmetricKeyProps({ alias: keyAlias, ...other }))
+    const keyAlias = alias || id
+    super(scope, id, symmetricKeyProps({ alias: `alias/${keyAlias}`, ...other }))
 
     this.accessPolicy = new iam.ManagedPolicy(this, 'PolicyFullAccess', {
       managedPolicyName: `allow-crypto-${id}`,
@@ -119,7 +119,7 @@ export class SymmetricKey extends kms.Key {
     })
 
     this.encryptPolicy = new iam.ManagedPolicy(this, 'PolicyEncrypt', {
-      managedPolicyName: `allow-encrypt-${id}`,
+      managedPolicyName: `allow-encrypt-${keyAlias}`,
       statements: [
         new iam.PolicyStatement({
           actions: [
@@ -133,7 +133,7 @@ export class SymmetricKey extends kms.Key {
     })
 
     this.decryptPolicy = new iam.ManagedPolicy(this, 'PolicyDecrypt', {
-      managedPolicyName: `allow-decrypt-${id}`,
+      managedPolicyName: `allow-decrypt-${keyAlias}`,
       statements: [
         new iam.PolicyStatement({
           actions: [
@@ -145,7 +145,7 @@ export class SymmetricKey extends kms.Key {
       ]
     })
 
-    this.alias = new JustAlias(scope, `alias-${id}`, keyAlias)
+    this.alias = new JustAlias(scope, `alias-${id}`, `alias/${keyAlias}`)
     cdk.Tag.add(this, 'stack', cdk.Aws.STACK_NAME)
   }
 

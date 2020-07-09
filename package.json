@@ -1,6 +1,6 @@
 {
   "name": "@ssh.com/c3",
-  "version": "0.6.4",
+  "version": "0.6.5",
   "description": "Compliant Cloud Components",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",

@@ -102,7 +102,7 @@ export class SymmetricKey extends kms.Key {
     super(scope, id, symmetricKeyProps({ alias: `alias/${keyAlias}`, ...other }))
 
     this.accessPolicy = new iam.ManagedPolicy(this, 'PolicyFullAccess', {
-      managedPolicyName: `allow-crypto-${id}`,
+      managedPolicyName: `allow-crypto-${keyAlias}`,
       statements: [
         new iam.PolicyStatement({
           actions: [

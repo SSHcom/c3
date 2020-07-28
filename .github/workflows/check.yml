@@ -1,0 +1,23 @@
+name: check
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+
+jobs:
+  this:
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: checkout
+        uses: actions/checkout@v2
+
+      - name: make
+        run: |
+          make
+
+      - name: coveralls
+        uses: coverallsapp/github-action@master
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}

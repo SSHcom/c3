@@ -24,19 +24,20 @@
   },
   "dependencies": {
     "@types/node": "13.13.5",
-    "@aws-cdk/core": "*",
-    "@aws-cdk/aws-kms": "*",
-    "@aws-cdk/aws-iam": "*",
-    "@aws-cdk/aws-efs": "*",
-    "@aws-cdk/aws-ec2": "*",
-    "@aws-cdk/aws-rds": "*",
-    "@aws-cdk/aws-s3": "*",
-    "@aws-cdk/aws-logs": "*",
-    "@aws-cdk/aws-codebuild": "*",
-    "@aws-cdk/aws-secretsmanager": "*",
-    "@aws-cdk/aws-lambda": "*",
-    "@aws-cdk/aws-cloudformation": "*",
-    "@aws-cdk/aws-autoscaling": "*"
+    "@aws-cdk/core": "1.63.0",
+    "@aws-cdk/aws-kms": "1.63.0",
+    "@aws-cdk/aws-iam": "1.63.0",
+    "@aws-cdk/aws-efs": "1.63.0",
+    "@aws-cdk/aws-ec2": "1.63.0",
+    "@aws-cdk/aws-rds": "1.63.0",
+    "@aws-cdk/aws-s3": "1.63.0",
+    "@aws-cdk/aws-logs": "1.63.0",
+    "@aws-cdk/aws-codebuild": "1.63.0",
+    "@aws-cdk/aws-secretsmanager": "1.63.0",
+    "@aws-cdk/aws-lambda": "1.63.0",
+    "@aws-cdk/aws-cloudformation": "1.63.0",
+    "@aws-cdk/aws-autoscaling": "1.63.0",
+    "@aws-cdk/aws-dynamodb": "1.63.0"
   },
   "devDependencies": {
     "@types/jest": "^25.2.1",
@@ -48,6 +49,6 @@
     "tslint-config-prettier": "^1.18.0",
     "typescript": "^3.8.3",
     "coveralls": "^3.0.11",
-    "@aws-cdk/assert": "*"
+    "@aws-cdk/assert": "1.63.0"
   }
 }

@@ -55,7 +55,7 @@ new c3.kms.SymmetricKey(stack, 'MyKey')
 const kmsKey = c3.kms.fromAlias(stack, 'alias/MyKey')
 ```
 
-The library support following components, we are actively seeking for contribution:
+The library support following components, we are actively seeking for contribution. Please see [an example](example/index.ts) about usage of components:
 
 ```typescript
 import * as c3 from '@ssh.com/c3'
@@ -65,6 +65,7 @@ new c3.kms.SymmetricKey(stack, 'MyKey')
 new c3.logs.LogGroup(stack, 'MyLogs', /* ... */)
 new c3.efs.FileSystem(stack, 'MyEFS', /* ... */)
 new c3.rds.DatabaseInstance(stack, 'MyRDS', /* ... */)
+new c3.dynamodb.Table(stack, 'MyTable', /* ... */)
 new c3.s3.Bucket(stack, 'MyS3', /* ... */)
 new c3.codebuild.Project(stack, 'MyCodeBuild', /* ... */)
 new c3.secretsmanager.Secret(stack, 'MySecret', /* ... */)

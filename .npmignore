@@ -5,6 +5,7 @@ coverage
 test
 node_modules
 doc
+example
 
 tsconfig.json
 tslint.json

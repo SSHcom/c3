@@ -17,15 +17,14 @@ import * as c3 from '@ssh/c3'
 //   cdk deploy c3-example
 //
 const app = new cdk.App()
+const env = {
+  account: process.env.CDK_DEFAULT_ACCOUNT,
+  region: process.env.CDK_DEFAULT_REGION,
+}
 
 //
 // Intentional split of essential app resources from other's
-const stackKey = new cdk.Stack(app, 'c3-example-kms', {
-  env: {
-    account: process.env.CDK_DEFAULT_ACCOUNT,
-    region: process.env.CDK_DEFAULT_REGION,
-  },
-})
+const stackKey = new cdk.Stack(app, 'c3-example-kms', { env })
 
 const key = new c3.kms.SymmetricKey(stackKey, 'MyKey', {
   alias: 'my-encryption-key'
@@ -35,12 +34,7 @@ key.grantToService(new iam.ServicePrincipal(`logs.${cdk.Aws.REGION}.amazonaws.co
 
 //
 //
-const stack = new cdk.Stack(app, 'c3-example', {
-  env: {
-    account: process.env.CDK_DEFAULT_ACCOUNT,
-    region: process.env.CDK_DEFAULT_REGION,
-  },
-})
+const stack = new cdk.Stack(app, 'c3-example', { env })
 
 const removalPolicy = cdk.RemovalPolicy.DESTROY
 const kmsKey = c3.kms.fromAlias(stack, key.alias.aliasName)

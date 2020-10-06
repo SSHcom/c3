@@ -37,7 +37,7 @@ it('Zero Trust Access Policy is embedded into AutoScalingGroup',
         {
           Key: "Name",
           PropagateAtLaunch: true,
-          Value: "MyAsg"
+          Value: "Default/MyAsg"
         },
         {
           Key: "privx-enable-auditing",
@@ -93,7 +93,7 @@ it('Zero Trust Access Policy with default parameters is embedded into AutoScalin
         {
           Key: "Name",
           PropagateAtLaunch: true,
-          Value: "MyAsg"
+          Value: "Default/MyAsg"
         },
         {
           Key: "privx-extender",

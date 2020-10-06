@@ -261,7 +261,7 @@ it('fromAlias creates a kms.IAlias, that does nothing',
     const role = new iam.ArnPrincipal(`arn:aws:iam::${cdk.Aws.ACCOUNT_ID}:role/Role`)
     
     expect(key.addAlias('other')).toBeNull()
-    expect(key.keyArn).toBe("arn:aws:kms:${Token[AWS::Region.4]}:${Token[AWS::AccountId.0]}:alias/key")
+    expect(key.keyArn).toBe("arn:aws:kms:${Token[AWS.Region.4]}:${Token[AWS.AccountId.0]}:alias/key")
     expect(key.keyId).toBeNull()
     expect(key.grant(role)).toBeNull()
     expect(key.grantDecrypt(role)).toBeNull()

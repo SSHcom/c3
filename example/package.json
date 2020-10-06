@@ -1,5 +1,5 @@
 {
-  "name": "gouldian-api-gateway-example",
+  "name": "c3-example",
   "version": "0.0.0",
   "dependencies": {
     "@types/node": "14.0.14",

@@ -12,7 +12,6 @@ it('c3.rds.DatabaseInstance compliant with GDPR 25',
     new c3.rds.DatabaseInstance(stack, 'MyRDS', {
       kmsKey,
       vpc,
-      masterUsername: 'test',
       engine: rds.DatabaseInstanceEngine.postgres({ version: rds.PostgresEngineVersion.VER_12 }),
       instanceType: new ec2.InstanceType('t3.small'),
     })
